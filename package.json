@@ -1,0 +1,18 @@
+{
+  "name": "tmi.js-cluster-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "supervisor.js",
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/derpierre65/tmi.js-cluster-test/issues"
+  },
+  "homepage": "https://github.com/derpierre65/tmi.js-cluster-test#readme",
+  "dependencies": {
+    "tmi.js-cluster": "git+https://github.com/derpierre65/tmi.js-cluster.git",
+    "mysql": "^2.18.1",
+    "redis": "^4.1.0",
+    "tmi.js": "^1.8.5"
+  }
+}
