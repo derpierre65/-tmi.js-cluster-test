@@ -10,4 +10,4 @@ COPY . .
 
 RUN chmod 0550 /usr/app/start.sh
 
-CMD ./usr/app/start.sh
+CMD ["/usr/app/start.sh"]

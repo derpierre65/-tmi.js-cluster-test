@@ -89,6 +89,11 @@ async function renewTwitchToken() {
 }
 
 async function updateChannels() {
+	if ( process.env.ENABLED !== 'true') {
+		console.log('Channel manager currently disabled');
+		return;
+	}
+
 	updating = true;
 
 	try {

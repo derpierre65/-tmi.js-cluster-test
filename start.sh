@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
@@ -8,7 +8,7 @@ cd /usr/app/
 
 if [ "$ROLE" = "supervisor" ]; then
   node supervisor.js
-elif [ "$ROLE" = "manager"]; then
+elif [ "$ROLE" = "manager" ]; then
   node channel-manager.js
 else
   echo "Unsupported role: $ROLE"
