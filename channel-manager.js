@@ -3,7 +3,7 @@ const axios = require('axios');
 const mysql = require('mysql');
 const { channelSanitize } = require('tmi.js-cluster/src/lib/util');
 
-let maxChannels = 1000;
+let maxChannels = process.env.MAX_CHANNELS || 300;
 
 if (!process.env.REDIS_URL) {
 	require('dotenv').config();
@@ -15,8 +15,14 @@ const twitchClientSecret = process.env.TWITCH_CLIENT_SECRET;
 let twitchClientTokenKey = 'tmi-cluster-test-client-token';
 
 const db = mysql.createPool({
-	host: process.env.DB_HOST, port: process.env.DB_PORT || 3306, user: process.env.DB_USERNAME || 'root', password: process.env.DB_PASSWORD || '',
-	database: process.env.DB_DATABASE, multipleStatements: true, charset: 'utf8mb4_general_ci', timezone: 'utc',
+	host: process.env.DB_HOST,
+	port: process.env.DB_PORT || 3306,
+	user: process.env.DB_USERNAME || 'root',
+	password: process.env.DB_PASSWORD || '',
+	database: process.env.DB_DATABASE,
+	multipleStatements: true,
+	charset: 'utf8mb4_general_ci',
+	timezone: 'utc',
 });
 
 const redisClient = createClient({
@@ -89,7 +95,7 @@ async function renewTwitchToken() {
 }
 
 async function updateChannels() {
-	if ( process.env.ENABLED !== 'true') {
+	if (process.env.ENABLED !== 'true') {
 		console.log('Channel manager currently disabled');
 		return;
 	}
@@ -183,4 +189,5 @@ redisClient
 	})
 	.catch((error) => {
 		console.log(`Can't connect to redis:`, error.message);
+		process.exit(1);
 	});

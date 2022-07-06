@@ -10,6 +10,7 @@ const db = mysql.createPool({
 	database: process.env.DB_DATABASE,
 	multipleStatements: true,
 	charset: 'utf8mb4_general_ci',
+	timezone: 'utc',
 });
 
 const redisClient = createClient({
