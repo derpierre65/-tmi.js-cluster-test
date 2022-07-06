@@ -26,10 +26,10 @@ redisClient
 			autoScale: {
 				processes: {
 					min: 1,
-					max: 10,
+					max: 5,
 				},
 				thresholds: {
-					channels: 30,
+					channels: 50,
 					scaleUp: 75,
 					scaleDown: 50,
 				},

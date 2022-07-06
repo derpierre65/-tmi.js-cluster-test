@@ -4,6 +4,10 @@ const { createClient } = require('redis');
 const { RedisCommandQueue, TmiClient, RedisChannelDistributor } = require('tmi.js-cluster/src');
 const fs = require('fs');
 
+if (!fs.existsSync('channels')) {
+	fs.mkdirSync('channels');
+}
+
 const db = mysql.createPool({
 	host: process.env.DB_HOST,
 	port: 3306,
@@ -15,7 +19,11 @@ const db = mysql.createPool({
 	timezone: 'utc',
 });
 
-const client = new tmi.Client({
+const redisClient = createClient({
+	url: 'redis://' + process.env.REDIS_URL,
+});
+
+const tmiClient = new tmi.Client({
 	connection: {
 		reconnect: false,
 		reconnectDecay: 1,
@@ -28,14 +36,12 @@ const client = new tmi.Client({
 	},
 });
 
-client.on('message', (channel, userstate, message, self) => {
-	fs.writeFile('channels/'+channel + '.log', [(new Date()).toISOString(), message].join(': ') + "\n", {flag: 'a+'}, function (err) {
-		if (err) return console.log(err);
+tmiClient.on('message', (channel, userstate, message, self) => {
+	fs.writeFile('channels/' + channel + '.log', [(new Date()).toISOString(), message].join(': ') + '\n', { flag: 'a+' }, function (err) {
+		if (err) {
+			return console.log(err);
+		}
 	});
-});
-
-const redisClient = createClient({
-	url: 'redis://' + process.env.REDIS_URL,
 });
 
 redisClient
@@ -43,10 +49,10 @@ redisClient
 	.then(async () => {
 		console.log('[bot] ready');
 		new TmiClient({
-			tmiClient: client,
-			channelDistributor: new RedisChannelDistributor(db, new RedisCommandQueue(redisClient)),
+			tmiClient,
 			database: db,
+			channelDistributor: new RedisChannelDistributor(db, new RedisCommandQueue(redisClient)),
 		});
 
-		client.connect();
+		tmiClient.connect();
 	});
