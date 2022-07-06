@@ -8,6 +8,6 @@ RUN npm install
 
 COPY . .
 
-RUN chmod 0550 /usr/app/start
+RUN chmod 0550 /usr/app/start.sh
 
-CMD ["/usr/app/start"]
+CMD ./usr/app/start.sh
