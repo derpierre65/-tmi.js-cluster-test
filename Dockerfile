@@ -8,4 +8,6 @@ RUN npm install
 
 COPY . .
 
-CMD ["node", "supervisor.js"]
+RUN chmod 0550 /usr/app/start
+
+CMD ["/usr/app/start"]

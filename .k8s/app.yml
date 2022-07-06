@@ -1,19 +1,19 @@
-apiVersion: v1
-kind: Secret
-metadata:
-  name: tmi-cluster-env
-  namespace: tmi-cluster
-data:
-  DB_HOST: bXlzcWwuZGVmYXVsdC5zdmMuY2x1c3Rlci5sb2NhbA==
-  DB_USERNAME: cm9vdA==
-  DB_DATABASE: dG1pX2NsdXN0ZXJfdGVzdA==
+#apiVersion: v1
+#kind: Secret
+#metadata:
+#  name: tmi-cluster-env
+#  namespace: tmi-cluster
+#data:
+#  DB_HOST: bXlzcWwuZGVmYXVsdC5zdmMuY2x1c3Rlci5sb2NhbA==
+#  DB_USERNAME: cm9vdA==
+#  DB_DATABASE: dG1pX2NsdXN0ZXJfdGVzdA==
 #  DB_PASSWORD:
 #  REDIS_URL:
 #  TMI_USERNAME:
 #  TMI_PASSWORD:
 #  TWITCH_CLIENT_ID:
 #  TWITCH_CLIENT_SECRET:
----
+#---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -33,6 +33,36 @@ spec:
         - name: tmi-cluster
           image: derpierre65/tmi-cluster-test:latest
           imagePullPolicy: Always
+          env:
+            - name: ROLE
+              value: supervisor
+          envFrom:
+            - secretRef:
+                name: tmi-cluster-env
+                optional: false
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: channel-manager
+  namespace: tmi-cluster
+spec:
+  selector:
+    matchLabels:
+      app: channel-manager
+  template:
+    metadata:
+      labels:
+        app: channel-manager
+        commit_hash: "CICD_GIT_COMMIT"
+    spec:
+      containers:
+        - name: channel-manager
+          image: derpierre65/tmi-cluster-test:latest
+          imagePullPolicy: Always
+          env:
+            - name: ROLE
+              value: manager
           envFrom:
             - secretRef:
                 name: tmi-cluster-env

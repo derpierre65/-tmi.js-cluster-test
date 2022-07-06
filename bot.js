@@ -47,7 +47,8 @@ tmiClient.on('message', (channel, userstate, message, self) => {
 redisClient
 	.connect()
 	.then(async () => {
-		console.log('[bot] ready');
+		console.log('[Bot] ready');
+
 		new TmiClient({
 			tmiClient,
 			database: db,

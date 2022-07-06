@@ -10,9 +10,13 @@
   },
   "homepage": "https://github.com/derpierre65/tmi.js-cluster-test#readme",
   "dependencies": {
-    "tmi.js-cluster": "git+https://github.com/derpierre65/tmi.js-cluster.git",
+    "axios": "^0.27.2",
     "mysql": "^2.18.1",
     "redis": "^4.1.0",
-    "tmi.js": "^1.8.5"
+    "tmi.js": "^1.8.5",
+    "tmi.js-cluster": "git+https://github.com/derpierre65/tmi.js-cluster.git"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.1"
   }
 }
