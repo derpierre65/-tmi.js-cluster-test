@@ -27,6 +27,7 @@ spec:
     metadata:
       labels:
         app: tmi-cluster
+        commit_hash: "CICD_GIT_COMMIT"
     spec:
       containers:
         - name: tmi-cluster
