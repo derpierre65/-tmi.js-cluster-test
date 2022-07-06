@@ -4,13 +4,17 @@ const { createClient } = require('redis');
 const { RedisCommandQueue, TmiClient, RedisChannelDistributor } = require('tmi.js-cluster/src');
 const fs = require('fs');
 
+if (!process.env.REDIS_URL) {
+	require('dotenv').config();
+}
+
 if (!fs.existsSync('channels')) {
 	fs.mkdirSync('channels');
 }
 
 const db = mysql.createPool({
 	host: process.env.DB_HOST,
-	port: 3306,
+	port: process.env.DB_PORT || 3306,
 	user: process.env.DB_USERNAME || 'root',
 	password: process.env.DB_PASSWORD || '',
 	database: process.env.DB_DATABASE,

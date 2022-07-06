@@ -3,11 +3,11 @@ const axios = require('axios');
 const mysql = require('mysql');
 const { channelSanitize } = require('tmi.js-cluster/src/lib/util');
 
-let maxChannels = process.env.MAX_CHANNELS || 300;
-
 if (!process.env.REDIS_URL) {
 	require('dotenv').config();
 }
+
+let maxChannels = process.env.MAX_CHANNELS || 300;
 
 const twitchClientId = process.env.TWITCH_CLIENT_ID;
 const twitchClientSecret = process.env.TWITCH_CLIENT_SECRET;
@@ -183,6 +183,9 @@ redisClient
 	.connect()
 	.then(async () => {
 		console.log('[Redis] connected.');
+
+		updateChannels();
+
 		setInterval(() => {
 			updateChannels();
 		}, 300_000);

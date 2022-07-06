@@ -2,6 +2,10 @@ const mysql = require('mysql');
 const { createClient } = require('redis');
 const { RedisCommandQueue, Supervisor, RedisChannelDistributor } = require('tmi.js-cluster/src');
 
+if (!process.env.REDIS_URL) {
+	require('dotenv').config();
+}
+
 const db = mysql.createPool({
 	host: process.env.DB_HOST,
 	port: process.env.DB_PORT || 3306,
@@ -37,6 +41,10 @@ redisClient
 			},
 		});
 
+		manager.on('supervisor.terminate', (id) => {
+			console.log('[supervisor] terminate', id);
+		});
+
 		manager.on('process.create', (id) => {
 			console.log('[supervisor] new process created, id:', id);
 		});
@@ -45,12 +53,8 @@ redisClient
 			console.log('[supervisor] can\'t join channel:', ...args);
 		});
 
-		manager.on('ping', () => {
-			// console.log('[manager] supervisor running, last ping:', Date.now());
-		});
-
 		manager.spawn();
 	})
 	.catch((error) => {
-		console.error('Can\'t connect to redis.', error)
+		console.error('Can\'t connect to redis.', error);
 	});
