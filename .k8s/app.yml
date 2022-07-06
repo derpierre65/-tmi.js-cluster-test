@@ -29,6 +29,7 @@ spec:
         app: tmi-cluster
         commit_hash: "CICD_GIT_COMMIT"
     spec:
+      terminationGracePeriodSeconds: 90
       containers:
         - name: tmi-cluster
           image: derpierre65/tmi-cluster-test:latest
