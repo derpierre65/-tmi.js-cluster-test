@@ -1,16 +1,6 @@
-const tmi = require('tmi.js');
-const { TmiClient, RedisChannelDistributor } = require('tmi.js-cluster/src');
-const fs = require('fs');
-
-if (!process.env.REDIS_URL) {
-	require('dotenv').config();
-}
-
-const { database, redisClient } = require('./db.js');
-
-if (!fs.existsSync('channels')) {
-	fs.mkdirSync('channels');
-}
+import tmi from 'tmi.js';
+import {RedisChannelDistributor, TmiClient} from 'tmi.js-cluster';
+import {database, redisClient} from './db.js';
 
 const tmiClient = new tmi.Client({
 	connection: {
@@ -26,12 +16,7 @@ const tmiClient = new tmi.Client({
 });
 
 tmiClient.on('message', (channel, userstate, message) => {
-	const line = `${[(new Date()).toISOString(), message].join(': ')}\n`;
-	fs.writeFile('channels/' + channel + '.log', line, { flag: 'a+' }, (err) => {
-		if (err) {
-			return console.log(err);
-		}
-	});
+	// handle message
 });
 
 redisClient

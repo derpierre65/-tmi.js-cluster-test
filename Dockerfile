@@ -3,10 +3,10 @@ FROM node:lts-alpine
 WORKDIR /usr/app/
 
 COPY package*.json ./
+COPY dist ./
+COPY start.sh ./
 
 RUN npm install --production
-
-COPY . .
 
 RUN chmod 0550 /usr/app/start.sh
 

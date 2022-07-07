@@ -1,5 +1,5 @@
-const mysql = require('mysql');
-const { createClient } = require('redis');
+import mysql from 'mysql';
+import {createClient} from 'redis';
 
 const database = mysql.createPool({
 	host: process.env.DB_HOST,
@@ -16,4 +16,7 @@ const redisClient = createClient({
 	url: 'redis://' + process.env.REDIS_URL,
 });
 
-module.exports = { database, redisClient };
+export {
+	database,
+	redisClient,
+};

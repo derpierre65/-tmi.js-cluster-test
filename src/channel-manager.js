@@ -1,9 +1,6 @@
-const axios = require('axios');
-const { channelSanitize } = require('tmi.js-cluster/src/lib/util');
-
-if (!process.env.REDIS_URL) {
-	require('dotenv').config();
-}
+import axios from 'axios';
+import {channelSanitize} from 'tmi.js-cluster/src/lib/util';
+import {database as db, redisClient} from './db.js';
 
 let maxChannels = process.env.MAX_CHANNELS || 300;
 
@@ -12,8 +9,6 @@ const twitchClientSecret = process.env.TWITCH_CLIENT_SECRET;
 
 let twitchClientTokenKey = 'tmi-cluster-test-client-token';
 let updating = false;
-
-const {database: db, redisClient} = require('./db.js');
 
 async function checkOffline(channels) {
 	let token = await redisClient.get(twitchClientTokenKey);

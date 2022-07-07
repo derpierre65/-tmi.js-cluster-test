@@ -2,9 +2,12 @@
   "name": "tmi.js-cluster-test",
   "version": "1.0.0",
   "description": "",
-  "main": "supervisor.js",
   "author": "",
   "license": "ISC",
+  "scripts": {
+    "build": "babel src --out-dir dist",
+    "supervisor": "cd src && nodemon -r dotenv/config --exec babel-node supervisor.js"
+  },
   "bugs": {
     "url": "https://github.com/derpierre65/tmi.js-cluster-test/issues"
   },
@@ -17,6 +20,16 @@
     "tmi.js-cluster": "git+https://github.com/derpierre65/tmi.js-cluster.git"
   },
   "devDependencies": {
-    "dotenv": "^16.0.1"
+    "@babel/cli": "^7.18.6",
+    "@babel/core": "^7.18.6",
+    "@babel/node": "^7.18.6",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-proposal-object-rest-spread": "^7.18.6",
+    "@babel/preset-env": "^7.18.6",
+    "dotenv": "^16.0.1",
+    "nodemon": "^2.0.19"
+  },
+  "nodemonConfig": {
+    "cwd": "./src"
   }
 }

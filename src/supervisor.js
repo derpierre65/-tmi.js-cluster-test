@@ -1,10 +1,5 @@
-const { Supervisor, RedisChannelDistributor } = require('tmi.js-cluster/src');
-
-if (!process.env.REDIS_URL) {
-	require('dotenv').config();
-}
-
-const {database, redisClient} = require('./db.js');
+import {RedisChannelDistributor, Supervisor} from 'tmi.js-cluster';
+import {database, redisClient} from './db.js';
 
 redisClient
 	.connect()
