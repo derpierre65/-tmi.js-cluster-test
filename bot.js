@@ -1,6 +1,4 @@
 const tmi = require('tmi.js');
-const mysql = require('mysql');
-const { createClient } = require('redis');
 const { TmiClient, RedisChannelDistributor } = require('tmi.js-cluster/src');
 const fs = require('fs');
 
@@ -8,24 +6,11 @@ if (!process.env.REDIS_URL) {
 	require('dotenv').config();
 }
 
+const { database, redisClient } = require('./db.js');
+
 if (!fs.existsSync('channels')) {
 	fs.mkdirSync('channels');
 }
-
-const database = mysql.createPool({
-	host: process.env.DB_HOST,
-	port: process.env.DB_PORT || 3306,
-	user: process.env.DB_USERNAME || 'root',
-	password: process.env.DB_PASSWORD || '',
-	database: process.env.DB_DATABASE,
-	multipleStatements: true,
-	charset: 'utf8mb4_general_ci',
-	timezone: 'utc',
-});
-
-const redisClient = createClient({
-	url: 'redis://' + process.env.REDIS_URL,
-});
 
 const tmiClient = new tmi.Client({
 	connection: {
@@ -40,8 +25,9 @@ const tmiClient = new tmi.Client({
 	},
 });
 
-tmiClient.on('message', (channel, userstate, message, self) => {
-	fs.writeFile('channels/' + channel + '.log', [(new Date()).toISOString(), message].join(': ') + '\n', { flag: 'a+' }, function (err) {
+tmiClient.on('message', (channel, userstate, message) => {
+	const line = `${[(new Date()).toISOString(), message].join(': ')}\n`;
+	fs.writeFile('channels/' + channel + '.log', line, { flag: 'a+' }, (err) => {
 		if (err) {
 			return console.log(err);
 		}
