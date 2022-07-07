@@ -6,7 +6,7 @@ if (!process.env.REDIS_URL) {
 	require('dotenv').config();
 }
 
-const db = mysql.createPool({
+const database = mysql.createPool({
 	host: process.env.DB_HOST,
 	port: process.env.DB_PORT || 3306,
 	user: process.env.DB_USERNAME || 'root',
@@ -25,8 +25,9 @@ redisClient
 	.connect()
 	.then(() => {
 		const manager = new Supervisor({
-			database: db,
-			channelDistributor: new RedisChannelDistributor(db, new RedisCommandQueue(redisClient)),
+			database,
+			redisClient,
+			channelDistributor: RedisChannelDistributor,
 		}, {
 			autoScale: {
 				processes: {

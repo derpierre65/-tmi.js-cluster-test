@@ -1,7 +1,7 @@
 const tmi = require('tmi.js');
 const mysql = require('mysql');
 const { createClient } = require('redis');
-const { RedisCommandQueue, TmiClient, RedisChannelDistributor } = require('tmi.js-cluster/src');
+const { TmiClient, RedisChannelDistributor } = require('tmi.js-cluster/src');
 const fs = require('fs');
 
 if (!process.env.REDIS_URL) {
@@ -12,7 +12,7 @@ if (!fs.existsSync('channels')) {
 	fs.mkdirSync('channels');
 }
 
-const db = mysql.createPool({
+const database = mysql.createPool({
 	host: process.env.DB_HOST,
 	port: process.env.DB_PORT || 3306,
 	user: process.env.DB_USERNAME || 'root',
@@ -55,8 +55,9 @@ redisClient
 
 		new TmiClient({
 			tmiClient,
-			database: db,
-			channelDistributor: new RedisChannelDistributor(db, new RedisCommandQueue(redisClient)),
+			database,
+			redisClient,
+			channelDistributor: RedisChannelDistributor,
 		});
 
 		tmiClient.connect();
