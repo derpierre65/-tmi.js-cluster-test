@@ -9,6 +9,7 @@ redisClient
 			redisClient,
 			channelDistributor: RedisChannelDistributor,
 		}, {
+			file: __dirname + '/bot.js',
 			autoScale: {
 				processes: {
 					min: 1,

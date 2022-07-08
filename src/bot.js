@@ -2,7 +2,7 @@ import tmi from 'tmi.js';
 import {RedisChannelDistributor, TmiClient} from 'tmi.js-cluster';
 import {database, redisClient} from './db.js';
 
-const tmiClient = new tmi.Client({
+const client = new tmi.Client({
 	connection: {
 		reconnect: false,
 		reconnectDecay: 1,
@@ -15,7 +15,7 @@ const tmiClient = new tmi.Client({
 	},
 });
 
-tmiClient.on('message', (channel, userstate, message) => {
+client.on('message', (channel, userstate, message) => {
 	// handle message
 });
 
@@ -24,12 +24,20 @@ redisClient
 	.then(async () => {
 		console.log('[Bot] ready');
 
-		new TmiClient({
-			tmiClient,
+		const tmiClient = new TmiClient({
 			database,
 			redisClient,
+			tmiClient: client,
 			channelDistributor: RedisChannelDistributor,
 		});
 
-		tmiClient.connect();
+		tmiClient.on('tmi.join', (channel) => {
+			console.log(`[Bot] [${process.env.PROCESS_ID}] joined ${channel}.`);
+		});
+
+		tmiClient.on('tmi.part', (channel) => {
+			console.log(`[Bot] [${process.env.PROCESS_ID}] parted ${channel}.`);
+		});
+
+		client.connect();
 	});
