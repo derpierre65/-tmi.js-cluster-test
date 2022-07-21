@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {channelSanitize} from 'tmi.js-cluster/src/lib/util';
+import {channelSanitize} from 'tmi.js-cluster/dist/lib/util';
 import {database as db, redisClient} from './db.js';
 
 let maxChannels = process.env.MAX_CHANNELS || 300;

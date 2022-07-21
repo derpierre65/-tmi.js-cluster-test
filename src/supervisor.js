@@ -16,9 +16,16 @@ redisClient
 					max: 5,
 				},
 				thresholds: {
-					channels: 50,
+					channels: 150,
 					scaleUp: 75,
 					scaleDown: 50,
+				},
+			},
+			throttle: {
+				join: {
+					allow: 2_000,
+					every: 1,
+					take: 2,
 				},
 			},
 		});

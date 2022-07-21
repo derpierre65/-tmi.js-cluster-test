@@ -17,7 +17,7 @@
     "mysql": "^2.18.1",
     "redis": "^4.1.0",
     "tmi.js": "^1.8.5",
-    "tmi.js-cluster": "^1.0.0-alpha.0"
+    "tmi.js-cluster": "github:derpierre65/tmi.js-cluster"
   },
   "devDependencies": {
     "@babel/cli": "^7.18.6",
