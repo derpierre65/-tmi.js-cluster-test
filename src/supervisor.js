@@ -1,12 +1,18 @@
 import {RedisChannelDistributor, Supervisor} from 'tmi.js-cluster';
-import {database, redisClient} from './db.js';
+import {database, redisPub, redisSub} from './db.js';
 
-redisClient
-	.connect()
+Promise
+	.all([
+		redisSub.connect(),
+		redisPub.connect(),
+	])
 	.then(() => {
 		const manager = new Supervisor({
+			redis: {
+				sub: redisSub,
+				pub: redisPub,
+			},
 			database,
-			redisClient,
 			channelDistributor: RedisChannelDistributor,
 		}, {
 			file: __dirname + '/bot.js',
@@ -16,14 +22,15 @@ redisClient
 					max: 5,
 				},
 				thresholds: {
-					channels: 150,
-					scaleUp: 75,
-					scaleDown: 50,
+					channels: 200,
+					scaleUp: 80,
+					scaleDown: 30,
 				},
 			},
 			throttle: {
 				join: {
 					allow: 2_000,
+					// every 1s take 2 channels is only recommend for the pub/sub system.
 					every: 1,
 					take: 2,
 				},

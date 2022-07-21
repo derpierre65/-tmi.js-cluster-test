@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {channelSanitize} from 'tmi.js-cluster/dist/lib/util';
-import {database as db, redisClient} from './db.js';
+import {database as db, redisPub} from './db.js';
 
 let maxChannels = process.env.MAX_CHANNELS || 300;
 
@@ -11,7 +11,7 @@ let twitchClientTokenKey = 'tmi-cluster-test-client-token';
 let updating = false;
 
 async function checkOffline(channels) {
-	let token = await redisClient.get(twitchClientTokenKey);
+	let token = await redisPub.get(twitchClientTokenKey);
 
 	channels = channels.map((channel) => (channel[0] === '#' ? channel.substring(1) : channel).toLowerCase());
 
@@ -36,7 +36,7 @@ async function checkOffline(channels) {
 }
 
 async function getCurrentStreams(pagination = null) {
-	let token = await redisClient.get(twitchClientTokenKey);
+	let token = await redisPub.get(twitchClientTokenKey);
 
 	return axios
 		.get('https://api.twitch.tv/helix/streams', {
@@ -58,14 +58,14 @@ async function getCurrentStreams(pagination = null) {
 }
 
 async function renewTwitchToken() {
-	let token = await redisClient.get(twitchClientTokenKey);
+	let token = await redisPub.get(twitchClientTokenKey);
 
 	if (!token) {
 		const { data } = await axios.post('https://id.twitch.tv/oauth2/token', {
 			grant_type: 'client_credentials', client_id: twitchClientId, client_secret: twitchClientSecret,
 		});
 
-		await redisClient.set(twitchClientTokenKey, data.access_token, {
+		await redisPub.set(twitchClientTokenKey, data.access_token, {
 			EX: data.expires_in,
 		});
 
@@ -151,14 +151,14 @@ async function updateChannels() {
 }
 
 async function joinHandler(channels, command = 'join') {
-	await redisClient.rPush('tmi-cluster:commands:join-handler', JSON.stringify({
+	await redisPub.rPush('tmi-cluster:commands:join-handler', JSON.stringify({
 		command, time: Date.now(), options: {
 			channels,
 		},
 	}));
 }
 
-redisClient
+redisPub
 	.connect()
 	.then(async () => {
 		console.log('[Redis] connected.');

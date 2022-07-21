@@ -12,11 +12,16 @@ const database = mysql.createPool({
 	timezone: 'utc',
 });
 
-const redisClient = createClient({
+const redisSub = createClient({
+	url: 'redis://' + process.env.REDIS_URL,
+});
+
+const redisPub = createClient({
 	url: 'redis://' + process.env.REDIS_URL,
 });
 
 export {
 	database,
-	redisClient,
+	redisPub,
+	redisSub,
 };
