@@ -16,6 +16,9 @@ Promise
 			channelDistributor: RedisChannelDistributor,
 		}, {
 			file: __dirname + '/bot.js',
+			redis: {
+				prefix: 'tmi-cluster-test:',
+			},
 			autoScale: {
 				processes: {
 					min: 1,

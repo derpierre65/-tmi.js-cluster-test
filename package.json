@@ -6,7 +6,7 @@
   "license": "ISC",
   "scripts": {
     "build": "babel src --out-dir dist",
-    "supervisor": "nodemon -r dotenv/config --exec babel-node src/supervisor.js"
+    "dev": "nodemon -r dotenv/config --exec babel-node src/supervisor.js --watch src --watch ../tmi.js-cluster/dist"
   },
   "bugs": {
     "url": "https://github.com/derpierre65/tmi.js-cluster-test/issues"
